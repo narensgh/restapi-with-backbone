@@ -64,7 +64,8 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Api\Controller\Index' => 'Api\Controller\IndexController'
+            'Api\Controller\Index' => 'Api\Controller\IndexController',
+        	'Api\Controller\Release' => 'Api\Controller\ReleaseController'
         ),
     ),
     'view_manager' => array(
@@ -93,4 +94,18 @@ return array(
             ),
         ),
     ),
+		'doctrine' => array(
+			'driver' => array(
+				'Api_Driver' => array(
+					'class' =>'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+						'cache' => 'array',
+						'paths' => array(__DIR__ . '/../src/Api/Model/Entity')
+					),
+			'orm_default' => array(
+				'drivers' => array(
+					'Api\Model\Entity' => 'Api_Driver'
+				)
+			)
+		)
+	),
 );
