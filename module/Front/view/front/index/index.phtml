@@ -10,7 +10,7 @@
 <body>
 	<div class="wrapper">
 	<div class="menu">
-		<a href = "#release">Release</a>
+		<a id="release" href = "#release">Release</a>
 		<a href = "#track">Track</a>
 		
 	</div>
@@ -34,6 +34,7 @@
 	</div>
 	<script type="text/template" id="releases-template">
 		<td><a id="<%= releaseId %>" href ="javascript:void(<%= releaseId %>)"><%= releaseName.substring(0,40) %></a></td>
+		<td><a href="javascript:void(<%= releaseId %>)" class="deleteRelease" id="<%= releaseId %>">Delete release</a></td>
 	</script>
 	<script type="text/template" id="tracks-template">
 		<td><a id="<%= trackId %>" href ="javascript:void(<%= trackId %>)"><%= trackName.substring(0,40) %></a></td>

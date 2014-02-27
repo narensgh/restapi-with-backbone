@@ -1,7 +1,9 @@
-define(['jquery', 'backbone','models/releaseModel'],function ($, Backbone, releaseModel) {
-var ReleaseCollection = Backbone.Collection.extend({
-        model : releaseModel,
-        url: 'http://localhost/restapi-backbone/api/release',
-});
-return ReleaseCollection;
+define(['collections/baseCollection','models/releaseModel'],function (BaseCollection, ReleaseModel) {
+	var ReleaseCollection = BaseCollection.extend({
+	    model : ReleaseModel,
+	    initialize : function() {
+	    	this.url = this.apiBaseUrl + "release";
+	    }
+	});
+	return ReleaseCollection;
 });

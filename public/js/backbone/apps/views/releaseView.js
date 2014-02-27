@@ -3,6 +3,8 @@ define(['jquery','underscore', 'backbone','collections/releaseCollection','views
 	    
 	ReleaseView =  Backbone.View.extend({
 		limit : 10,
+		params : null,
+		releaseCollection : null,
 		currentIndex : 0,
 		el:$('body'),
 		singleReleaseTemplate : _.template($('#single-release-template').html()),
@@ -11,73 +13,89 @@ define(['jquery','underscore', 'backbone','collections/releaseCollection','views
 			table_data : '#releases',
 			btnShowMore : 'a#show_more',
 			sRelease : '#s-release',
-			row : '.row'
+			row : '.row',
 		},
 		events:{
 			'click a#show_more' : 'showMore',
-			'click .row' : 'showRelease',
+			'click .row' : 'getRelease',
 			'click .btnEditRelease' : 'editRelease',
 			'click .btnCancel' : 'cancelEdit',
-			'click .btnSaveRelease' : 'saveRelease'
-				
+			'click .btnSaveRelease' : 'saveRelease',
+			'click #release' : 'reloadRecord',
+			'click .deleteRelease' : 'deleteRelease',
 		},
-	        initialize: function () {
-	        	self = this;
-	        	this.collection = new releaseCollection();
-	        	this.collection.fetch({
-	        		data: {
-	    		        'order_by': 'release_id'
-	    		      },
-	    		      success: function()
-	    		      {
-	    		    	  self.render();
-	    		      }
-	        	});
-	        	
-	        },
-	        render : function(){
-	        	this.$el.find(this.els.row).remove();
-	        	releases = this.collection.models[0].attributes.releases;
-	        	_.each(releases.slice(this.currentIndex,(this.currentIndex + this.limit)), function(data) {
-	    			this.$el.find(this.els.table_data).append(new releaseListView({
-	    				id : 'release_' + data.releaseId,
-	    				model : data
-	    			}).render().el);
-	    		}, this);	
-	    		return this;
-	        },
-	        showMore : function(){
-	        	this.currentIndex = this.currentIndex + this.limit; 
-	        	if(this.currentIndex >= this.collection.models.length){
-	        		this.$el.find(this.els.btnShowMore).hide();
-	        	}
-	        	this.render();
-	        },
-	        renderSingleRelease : function(release_id, action){
-	        	var singleRelease = {"release_id" : release_id};
-	        	singleReleaseC = this.collection.where({release_id : release_id});
-	        	singleRelease.release_name = singleReleaseC[0].get('release_name');
-	        	singleRelease.release_date = singleReleaseC[0].get('release_date');
-	        	singleRelease.genre_id = singleReleaseC[0].get('genre_id');
-	        	singleRelease.upc = singleReleaseC[0].get('upc');
-	        	if(action == "editRelease"){
-	        		this.$el.find(this.els.sRelease).html(this.releaseEditTemplate(singleRelease));
-	        	}else{
-	        		this.$el.find(this.els.sRelease).html(this.singleReleaseTemplate(singleRelease));
-	        	}
-	        },
-	        editRelease:function(e){
-	        	this.renderSingleRelease(e.target.id, "editRelease");
-	        },
-	        showRelease : function (e){
-	        	this.renderSingleRelease(e.target.id, "showRelease");
-	        },
-	        cancelEdit: function (e) {
-	        	this.renderSingleRelease(e.target.id, "showRelease");
-	        },  
-	        saveRelease : function(e){
-	        	this.renderSingleRelease(e.target.id, "showRelease");
-	        }
-	    });
+        initialize: function () {
+        	this.params = {};
+        	this.collection = new releaseCollection();
+        	this.fetchRecord();        	
+        },
+        fetchRecord : function() {
+        	self = this;
+        	console.log(this.params);
+        	this.collection.fetch({
+        		data : self.params,
+    		      success: function(){
+    		    	  self.render();
+    		      }
+        	});
+        	this.params = {};
+        },
+        reloadRecord : function (){
+        	this.fetchRecord();
+        },
+        render : function(){
+        	this.$el.find(this.els.row).remove();
+        	releases = this.collection.models;
+        	_.each(releases.slice(this.currentIndex,(this.currentIndex + this.limit)), function(data) {
+        		data = data.toJSON();
+    			this.$el.find(this.els.table_data).append(new releaseListView({
+    				id : 'release_' + data.releaseId,
+    				model : data
+    			}).render().el);
+    		}, this);	
+    		return this;
+        },
+        getRelease : function (e){
+        	this.params.id = e.target.id;
+        	this.fetchRecord();
+        },
+        showMore : function(){
+        	this.currentIndex = this.currentIndex + this.limit; 
+        	if(this.currentIndex >= this.collection.models[0].length){
+        		this.$el.find(this.els.btnShowMore).hide();
+        	}
+        	this.render();
+        },
+        deleteRelease : function(e){
+        	release = {'releaseId' : Number(e.target.id)};
+        	var deletedRelease = this.collection.where(release)[0];
+             var flag = confirm('Are you sure you want to delete Genre details?');
+             if(flag){
+                 this.collection.remove(deletedRelease);
+                 this.destroyRelease(deletedRelease);
+                 this.render();
+             }
+        },
+        destroyRelease: function (target) {
+            if(target.get('releaseId')!=0){
+            	target.set('id',target.get('releaseId'));
+            }
+            deleteParams = {};
+            deleteParams.id = Number(target.get('releaseId'));
+            target.destroy({
+            	data : deleteParams
+            });
+        },
+        editRelease:function(e){
+        	this.renderSingleRelease(e.target.id, "editRelease");
+        },
+        
+        cancelEdit: function (e) {
+        	this.renderSingleRelease(e.target.id, "showRelease");
+        },  
+        saveRelease : function(e){
+        	this.renderSingleRelease(e.target.id, "showRelease");
+        }
+    });
 	return ReleaseView;
 });

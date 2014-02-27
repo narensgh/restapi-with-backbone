@@ -40,7 +40,7 @@ class ReleaseController extends AbstractRestfulController
 		$releaseService = new ReleaseService($this->getEntityManager());
 		$release = $releaseService->release($id);
 		return new JsonModel(array(
-				'releases' => $release
+			'releases' => $release
 		));
 	}
 	
@@ -53,10 +53,41 @@ class ReleaseController extends AbstractRestfulController
 	{
 		$releaseService = new ReleaseService($this->getEntityManager());
 		$releases = $releaseService->release();
-		return new JsonModel(array(
-				'releases' => $releases
+		return new JsonModel( $releases);
+	}
+	
+	/**
+	 * Delete an existing resource
+	 *
+	 * @param  mixed $id
+	 * @return mixed
+	 */
+	public function delete($id)
+	{
+		$this->response->setStatusCode(202);
+	
+		return new JsonModel(  array(
+				'content' => 'delete Method ' .$id
 		));
 	}
+	
+	/**
+	 * Delete the entire resource collection
+	 *
+	 * Not marked as abstract, as that would introduce a BC break
+	 * (introduced in 2.1.0); instead, raises an exception if not implemented.
+	 *
+	 * @return mixed
+	 */
+	public function deleteList()
+	{
+		$this->response->setStatusCode(202);
+	
+		return new JsonModel( array(
+				'content' => 'deleteList Method'
+		));
+	}
+	
 	
 }
 
