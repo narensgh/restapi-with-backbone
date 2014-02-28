@@ -21,6 +21,12 @@ class ReleaseService
 		$releases = $this->_release->release($releaseId);
 		return json_decode(json_encode($releases, true));
 	}
+	
+	public function delete($releaseId = null)
+	{
+		$releases = $this->_release->delete($releaseId);
+		return $releases;
+	}
 }
 
 ?>

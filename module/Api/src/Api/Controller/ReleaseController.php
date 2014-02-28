@@ -39,9 +39,7 @@ class ReleaseController extends AbstractRestfulController
 	{
 		$releaseService = new ReleaseService($this->getEntityManager());
 		$release = $releaseService->release($id);
-		return new JsonModel(array(
-			'releases' => $release
-		));
+		return new JsonModel($release);
 	}
 	
 	/**
@@ -53,7 +51,7 @@ class ReleaseController extends AbstractRestfulController
 	{
 		$releaseService = new ReleaseService($this->getEntityManager());
 		$releases = $releaseService->release();
-		return new JsonModel( $releases);
+		return new JsonModel($releases);
 	}
 	
 	/**
@@ -64,11 +62,16 @@ class ReleaseController extends AbstractRestfulController
 	 */
 	public function delete($id)
 	{
-		$this->response->setStatusCode(202);
-	
-		return new JsonModel(  array(
-				'content' => 'delete Method ' .$id
-		));
+		$releaseService = new ReleaseService($this->getEntityManager());
+		$release = $releaseService->delete($id);
+		if($release){
+			return new JsonModel(array('releaseId' =>$id, 'message' => 'Release Deleted'));
+		}else{
+			$this->response->setStatusCode(400);
+			return new JsonModel(array(
+					'content' => 'delete Method ' .$id
+			));
+		}
 	}
 	
 	/**
@@ -81,10 +84,9 @@ class ReleaseController extends AbstractRestfulController
 	 */
 	public function deleteList()
 	{
-		$this->response->setStatusCode(202);
-	
+		$this->response->setStatusCode(405);	
 		return new JsonModel( array(
-				'content' => 'deleteList Method'
+				'content' => 'Method Not Allowed'
 		));
 	}
 	

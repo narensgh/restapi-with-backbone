@@ -17,9 +17,9 @@
 		<div class="content-wrapper">
 			<div class="result">
 				<div  id="results">
-					<table id="releases">
+					<table id="releases" cellpadding="6" cellspacing="6">
 					</table>
-					<table id="tracks">
+					<table id="tracks" border="1" cellspacing="0">
 					</table>
 				</div>
 				<span class="show-more"><a id="show_more" href="javascript:void(0);">Show
@@ -33,8 +33,9 @@
 		</div>
 	</div>
 	<script type="text/template" id="releases-template">
-		<td><a id="<%= releaseId %>" href ="javascript:void(<%= releaseId %>)"><%= releaseName.substring(0,40) %></a></td>
-		<td><a href="javascript:void(<%= releaseId %>)" class="deleteRelease" id="<%= releaseId %>">Delete release</a></td>
+		<td><a id="get_<%= releaseId %>" class="getRelease" href ="javascript:void(<%= releaseId %>)"><%= releaseName.substring(0,40) %></a></td>
+		<td><a title="Delete Release :  <%= releaseName.substring(0,40) %>" href="javascript:void(<%= releaseId %>)" class="deleteRelease" id="del_<%= releaseId %>">Delete release</a></td>
+		<td><a title="Edit Release :  <%= releaseName.substring(0,40) %>" href="javascript:void(<%= releaseId %>)" class="editRelease" id="edit_<%= releaseId %>">Edit release</a></td>
 	</script>
 	<script type="text/template" id="tracks-template">
 		<td><a id="<%= trackId %>" href ="javascript:void(<%= trackId %>)"><%= trackName.substring(0,40) %></a></td>
@@ -54,15 +55,14 @@
 		</script>
 	
 	<script id="release-edit-template" type="text/template">
-		<tr><td>Release Id</td><td class="col2"><%= release_id %></td></tr>
-        <tr><td>Release Name</td><td><input id="releaseName" class="editInput" value="<%= release_name %>"/></td></tr>	
-		<tr><td>Release Date</td><td><input id="releaseDate" class="editInput" value="<%= release_date %>"/></td></tr>	
-		<tr><td>UPC</td><td><input id="releaseUpc" class="editInput" value="<%= upc %>"/></td></tr>
-		<tr><td>Genre Id</td><td><%= genre_id %></td></tr>      
+		<tr><td>Release Id</td><td class="col2"><%= releaseId %></td></tr>
+        <tr><td>Release Name</td><td><input id="releaseName" class="editInput" value="<%= releaseName %>"/></td></tr>	
+		<tr><td>Release Date</td><td><input id="releaseDate" class="editInput" value="<%= genreId %>"/></td></tr>	
+		<tr><td>UPC</td><td><input id="releaseUpc" class="editInput" value="<%= upc %>"/></td></tr>   
 		<tr>
         <td colspan= "2" align="center">
-        	<input class="btnSaveRelease" id="<%= release_id %>" type="button" value="Save"/>
-        	<input class="btnCancel" id="<%= release_id %>" type="button" value="Cancel"/>
+        	<input class="saveEditedRelease" id="edited_<%= releaseId %>" type="button" value="Save"/>
+        	<input class="cancelEdit" id="cancel_<%= releaseId %>" type="button" value="Cancel"/>
         </td>
 		</tr>
 	</script>
