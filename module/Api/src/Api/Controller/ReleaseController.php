@@ -90,6 +90,27 @@ class ReleaseController extends AbstractRestfulController
 		));
 	}
 	
+	/**
+	 * Update an existing resource
+	 *
+	 * @param  mixed $id
+	 * @param  mixed $data
+	 * @return mixed
+	 */
+	public function update($id, $data)
+	{
+		$releaseService = new ReleaseService($this->getEntityManager());
+		$release = $releaseService->update($id, $data);
+		if($release){
+			$this->response->setStatusCode(200);
+			return new JsonModel(array('releaseId' =>$id, 'message' => 'Release updated'));
+		}else{
+			$this->response->setStatusCode(400);
+			return new JsonModel(array(
+					'content' => 'Error occured while Editing ' .$release
+			));
+		}
+	}
 	
 }
 

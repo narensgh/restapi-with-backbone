@@ -14,6 +14,7 @@ define(['jquery','underscore', 'backbone','collections/releaseCollection','views
 			sRelease : '#s-release',
 			row : '.row',
 			editContainer: ".edit-container",
+			releaseName : "#releaseName",
 		},
 		events:{
 			'click a#show_more' : 'showMore',
@@ -23,6 +24,7 @@ define(['jquery','underscore', 'backbone','collections/releaseCollection','views
 			'click .btnCancel' : 'cancelEdit',
 			'click .saveEditedRelease' : 'saveEditedRelease',
 			'click #release' : 'reloadRecord',
+			'click .cancelEdit' : 'cancelEdit'
 			
 		},
         initialize: function () {
@@ -99,52 +101,34 @@ define(['jquery','underscore', 'backbone','collections/releaseCollection','views
         	release.releaseName = this.collection.where({'releaseId' : release.releaseId})[0].get("releaseName");
         	release.upc = this.collection.where({'releaseId' : release.releaseId})[0].get("upc");
         	release.genreId = this.collection.where({'releaseId' : release.releaseId})[0].get("genreId");
-        	console.log(release);
         	this.$el.find("#release_"+releaseId).attr("class", "edit-container").html(this.editReleaseTemplate(release));
         },
         saveEditedRelease: function (e) {
             e.preventDefault();
-            var edited = this.collection.where({'releaseId' : this.$el.find(this.els.editContainer).attr('id').split('_')[1]})[0],
-            newrelease = $(this.els.editrelease).val(),
+            var edited = this.collection.where({'releaseId' : Number(this.$el.find(this.els.editContainer).attr('id').split('_')[1])})[0];
+            releaseName = $(this.els.releaseName).val(),
             newupc = $(this.els.editupc).val(),
             newrelease_id = this.$el.find(this.els.editContainer).attr('id').split('_')[1];
-            edited.set({id: this.$el.find(this.els.editContainer).attr('id').split('_')[1], release_name: $.trim(newrelease), upc: newupc, release_id : newrelease_id});
+            edited.set({id: this.$el.find(this.els.editContainer).attr('id').split('_')[1], releaseName: $.trim(releaseName), upc: newupc, releaseId : newrelease_id});
             this.saveRelease(edited);
-            this.cancel_edit();
+            this.cancelEdit();
         },
-        save_edited: function (e) {
-            e.preventDefault();
-            var edited = this.collection.where({release_id: this.$el.find(this.els.editContainer).attr('id').split('_')[1]})[0],
-            newrelease = $(this.els.editrelease).val(),
-            newupc = $(this.els.editupc).val(),
-            newrelease_id = this.$el.find(this.els.editContainer).attr('id').split('_')[1];
-            edited.set({id: this.$el.find(this.els.editContainer).attr('id').split('_')[1], release_name: $.trim(newrelease), upc: newupc, release_id : newrelease_id});
-            this.save_release(edited);
-            this.cancel_edit();
+        saveRelease : function(release){
+        	var that=this;
+        	release.save(release,{
+                success: function(model, response, options){
+                	if(response!=1){
+                		release.set("releaseId", String(response));
+                	}
+                	that.render();
+                },
+                error: function(model, xhr, options){
+                    xhr.fault = {"networkError": 'We\'re sorry, a network error occured when trying to save this genre.'};
+                },
+                wait: true
+            });	
         },
-        save_release: function (newRelease) {  
-    		var that=this;
-        	newRelease.save(newRelease,{
-                    success: function(model, response, options){
-    					//that.finish_save(newRelease,response);
-                    	if(response!=1){
-                    		newRelease.set("release_id", String(response));
-                    	}
-                    	that.render();
-                    },
-                    error: function(model, xhr, options){
-                        xhr.fault = {"networkError": 'We\'re sorry, a network error occured when trying to save this genre.'};
-                    },
-                    wait: true
-                });		
-        },
-    	finish_save:function(newRelease,response){
-    		if(response!=1){
-                    		newRelease.set("release_id", String(response));
-                    	}
-    	  this.render();
-    	},
-        cancel_edit: function () {
+        cancelEdit: function () {
             this.$el.find(this.els.editContainer).remove();
             this.render();
         },
@@ -158,12 +142,6 @@ define(['jquery','underscore', 'backbone','collections/releaseCollection','views
              });   
         	 this.collection.add(addedrelease);  
         	 this.save_release(addedrelease);       
-        },  
-        cancelEdit: function (e) {
-        	this.renderSingleRelease(e.target.id, "showRelease");
-        },  
-        saveRelease : function(e){
-        	this.renderSingleRelease(e.target.id, "showRelease");
         }
     });
 	return ReleaseView;

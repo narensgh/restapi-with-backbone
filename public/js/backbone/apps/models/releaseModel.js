@@ -6,7 +6,6 @@ var ReleaseModel = BaseModel.extend({
 		},
 		sync: function(method, model, options) 
 	    {
-			alert(method);
 	        options.url = this.apiBaseUrl + "release?"+ this.buildParam();
 	        Backbone.sync.apply(this, arguments);
 		},

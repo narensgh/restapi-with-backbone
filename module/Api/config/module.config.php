@@ -65,7 +65,8 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Api\Controller\Index' => 'Api\Controller\IndexController',
-        	'Api\Controller\Release' => 'Api\Controller\ReleaseController'
+        	'Api\Controller\Release' => 'Api\Controller\ReleaseController',
+        	'Api\Controller\Authenticate' => 'Api\Controller\AuthenticateController'
         ),
     ),
     'view_manager' => array(

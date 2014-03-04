@@ -7,6 +7,7 @@ class ReleaseService
 {
 	private $_em;
 	private $_release;
+	
 	function __construct($em) 
 	{
 		if(!$this->_em)
@@ -27,6 +28,11 @@ class ReleaseService
 		$releases = $this->_release->delete($releaseId);
 		return $releases;
 	}
+	 public function update($releaseId, $data)
+	 {
+	 	$releases = $this->_release->saveRelease($releaseId, $data);
+	 	return $releases;
+	 }
 }
 
 ?>

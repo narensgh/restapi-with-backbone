@@ -46,6 +46,23 @@ class Releases
 			return $exception;
 		}
 	}
+	
+	public function saveRelease($releaseId = null, $data)
+	{
+		try{
+			$release = $this->_em->getRepository('Api\Model\Entity\Releases')->findOneBy(array('releaseId'=>$releaseId));
+			if(empty($release)){
+				$release = new Api\Model\Entity\Releases();
+			}
+			$release->setReleaseName($data['releaseName']);
+			$release->setGenreId($data['genreId']);
+			$this->_em->persist($release);
+			$this->_em->flush();
+			return true;
+		}catch(Exception $ex){
+			return $ex;
+		}
+	}
 }
 
 ?>
