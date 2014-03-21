@@ -3,20 +3,6 @@ namespace Front;
 return array(
     'router' => array(
         'routes' => array(
-            'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/',
-                    'defaults' => array(
-                        'controller' => 'Front\Controller\Index',
-                        'action'     => 'index',
-                    ),
-                ),
-            ),
-            // The following is a route to simplify getting started creating
-            // new controllers and actions without needing to create a new
-            // module. Simply drop new controllers in, and you can access them
-            // using the path /application/:controller/:action
             'front' => array(
                 'type'    => 'Literal',
                 'options' => array(
@@ -66,7 +52,8 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Front\Controller\Index' => 'Front\Controller\IndexController'
+            'Front\Controller\Index' => 'Front\Controller\IndexController',
+        	'Front\Controller\Message' => 'Front\Controller\MessageController'
         ),
     ),
     'view_manager' => array(

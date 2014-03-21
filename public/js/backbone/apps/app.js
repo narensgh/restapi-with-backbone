@@ -1,11 +1,15 @@
 require.config({
-    baseUrl: 'js/backbone/libs',
+    baseUrl: '../../js/backbone/libs',
     paths: {
     	collections : '../apps/collections',
     	views : '../apps/views',
+    	baseView : '../apps/views/baseView',
     	models : '../apps/models',
     	apps: '../apps',
-        tpl: '../tpl'
+        tpl: '../apps/templates',
+        handlebars : 'handlebars',
+		text : 'text',
+		
     },
     map: {
         '*': {
@@ -19,7 +23,10 @@ require.config({
         },
         'underscore': {
             exports: '_'
-        }
+        },
+        handlebars: {
+            exports: 'Handlebars'
+          },
     }
 });
 
