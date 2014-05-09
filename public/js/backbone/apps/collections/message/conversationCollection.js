@@ -1,7 +1,8 @@
-define(['collections/baseCollection'],function (BaseCollection) {
+define(['collections/baseCollection','models/message/conversationModel'],function (BaseCollection, ConversationModel) {
 	var ConversationCollection = BaseCollection.extend({
-//	    model : ReleaseModel,
+	    model : ConversationModel,
 	    initialize : function() {
+	    	
 	    	this.url = this.apiBaseUrl + "message";
 	    }
 	});

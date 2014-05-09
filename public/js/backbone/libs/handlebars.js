@@ -284,19 +284,53 @@ var __module2__ = (function(__dependency1__, __dependency2__) {
       return ret;
     });
 
-    instance.registerHelper('if', function(conditional, options) {
-      if (isFunction(conditional)) { conditional = conditional.call(this); }
+    /**
+     * Customised if conditions
+     * 
+     */
+    instance.registerHelper('if', function(var1, operator, var2, options) {
+    	switch (operator)
+        {
+            case "==":
+                return (var1 == var2)?options.fn(this):options.inverse(this);
 
-      // Default behavior is to render the positive path if the value is truthy and not empty.
-      // The `includeZero` option may be set to treat the condtional as purely not empty based on the
-      // behavior of isEmpty. Effectively this determines if 0 is handled by the positive path or negative.
-      if ((!options.hash.includeZero && !conditional) || Utils.isEmpty(conditional)) {
-        return options.inverse(this);
-      } else {
-        return options.fn(this);
-      }
+            case "!=":
+                return (var1 != var2)?options.fn(this):options.inverse(this);
+
+            case "===":
+                return (var1 === var2)?options.fn(this):options.inverse(this);
+
+            case "!==":
+                return (var1 !== var2)?options.fn(this):options.inverse(this);
+
+            case "&&":
+                return (var1 && var2)?options.fn(this):options.inverse(this);
+
+            case "||":
+                return (var1 || var2)?options.fn(this):options.inverse(this);
+
+            case "<":
+                return (var1 < var2)?options.fn(this):options.inverse(this);
+
+            case "<=":
+                return (var1 <= var2)?options.fn(this):options.inverse(this);
+
+            case ">":
+                return (var1 > var2)?options.fn(this):options.inverse(this);
+
+            case ">=":
+             return (var1>= var2)?options.fn(this):options.inverse(this);
+
+            default:
+            	if(!var1 || Handlebars.Utils.isEmpty(var1)) {
+            	    return operator.inverse(this);
+            	  } else {
+            	    return operator.fn(this);
+            	  }
+        }
+      
     });
-
+    
     instance.registerHelper('unless', function(conditional, options) {
       return instance.helpers['if'].call(this, conditional, {fn: options.inverse, inverse: options.fn, hash: options.hash});
     });

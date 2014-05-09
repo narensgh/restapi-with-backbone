@@ -93,11 +93,19 @@ a {
 
 
 /*------------------------ Working for wall ------------------*/
-
+.clear
+{
+	clear: both;
+}
 .message-form
 {
 	border-bottom:1px solid #CBCBCB; 	
 	padding: 15px 5px;
+}
+.fromname
+{
+	color: #FF5D55;
+	display: block;
 }
 .message-box
 {
@@ -118,6 +126,14 @@ a {
 	cursor: pointer;
 	color: #fefefe;
 	font: 500 16px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.message
+{
+	border: 1px solid #DEDEDE;
+    border-radius: 5px;
+    margin: 3px;
+    padding: 2px 5px;
+    width: 300px;
 }
 
 /* ----------------------------- Working for login ------------------------- */
